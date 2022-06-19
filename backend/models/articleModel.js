@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+
 const articleSchema = mongoose.Schema({
     title: {
         type: String,
@@ -15,6 +16,11 @@ const articleSchema = mongoose.Schema({
     imageUrl: {
         type: String,
         required: [true, 'Please add an image value']
+    },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: [true, 'Please choose a category'],
+        ref: 'Category'
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

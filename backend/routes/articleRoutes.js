@@ -8,7 +8,9 @@ const
     deleteArticle
 } = require('../controllers/articleController')
 
-router.route('/').get(getArticles).post(setArticle)
-router.route('/:id').put(updateArticle).delete(deleteArticle)
+const { protect } = require('../middleware/authMiddleware')
+
+router.route('/').get(protect, getArticles).post(protect, setArticle)
+router.route('/:id').put(protect, updateArticle).delete(protect, deleteArticle)
 
 module.exports = router
