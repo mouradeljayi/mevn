@@ -6,6 +6,11 @@ const categorySchema = new Schema({
         type: String, 
         unique: true, 
         required: [true, 'Please add an name value']
+    },
+    icon: { 
+        type: String, 
+        unique: true, 
+        required: [true, 'Please add an icon value']
     }
 });
 

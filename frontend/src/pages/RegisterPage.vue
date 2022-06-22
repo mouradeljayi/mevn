@@ -50,7 +50,11 @@ export default {
       errors: ""
     }
   },
-  
+  created() {
+    if(localStorage.getItem('token')) {
+        this.$router.push({ name: 'HomePage' })
+    }
+  },
   methods: {
    signUp() {
     if(this.form.password !== this.form.password_confirmation) {

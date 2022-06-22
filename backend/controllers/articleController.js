@@ -24,7 +24,7 @@ const setArticle = asyncHandler(async (req, res) => {
         title,
         description,
         city,
-        imageUrl,
+        imageUrl: req.file.location,
         category,
         user: req.user.id
     })
