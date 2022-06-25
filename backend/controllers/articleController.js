@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Article = require('../models/articleModel')
 const User = require('../models/userModel')
+const fs = require('fs')
 
 // @desc Get Articles
 // @route GET /api/articles
@@ -14,21 +15,23 @@ const getArticles = asyncHandler(async (req, res) => {
 // @route POST /api/articles
 // @access Private
 const setArticle = asyncHandler(async (req, res) => {
-    const { title, description, city, imageUrl, category} = req.body
 
-    if(!title || !description || !city || !imageUrl || !category) {
+    if(!req.body.title || !req.body.description || !req.body.city || !req.body.category || !req.file) {
         res.status(400)
-        throw new Error('Please enter all fields')
+        throw new Error('You must enter all fields')
+    } else {
+        const imagename = req.file.filename
+
+        const article = await Article.create({
+            title: req.body.title,
+            description: req.body.description,
+            city: req.body.city,
+            category: req.body.category,
+            user: req.user.id,
+            imageUrl: imagename
+        })
+        res.status(200).json(article)
     }
-    const article = await Article.create({
-        title,
-        description,
-        city,
-        imageUrl: req.file.location,
-        category,
-        user: req.user.id
-    })
-    res.status(200).json(article)
 })
 
 // @desc Update Article
@@ -51,6 +54,19 @@ const updateArticle = asyncHandler(async (req, res) => {
     if(article.user.toString() !== user.id) {
         res.status(401)
         throw new Error('User not authorized')
+    }
+    // image update
+    let new_image = ''
+
+    if(req.file) {
+        new_image = req.file.filename
+        try{
+            fs.unlinkSync('./uploads/' + req.body.old_image)
+        }catch(err) {
+            console.log(err)
+        }
+    }else {
+        new_image = req.body.old_image
     }
     const updatedArticle = await Article.findByIdAndUpdate(req.params.id, req.body, {
         new : true,
@@ -79,7 +95,15 @@ const deleteArticle = asyncHandler(async (req, res) => {
         res.status(401)
         throw new Error('User not authorized')
     }
+    
     await article.remove()
+    if(article.imageUrl != '') {
+        try{
+            fs.unlinkSync('./uploads/'+article.imageUrl)
+        }catch(err) {
+            console.log(err)
+        }
+    }
     res.status(200).json({ id: req.params.id })
 })
 

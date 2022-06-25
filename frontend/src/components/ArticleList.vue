@@ -2,7 +2,8 @@
     <div class="mt-3">
        <div class="d-flex justify-content-between">
         <h4>Available Articles</h4>
-        <button class="btn btn-sm btn-warning">New article</button>
+        <!--<button type="button" @click="showModal" class="btn btn-sm btn-warning">New article</button>-->
+        <button type="button" @click="toNewArticlePage" class="btn btn-sm btn-warning">New article</button>
        </div>
        <div class="p-3 card mt-3 ">
            <div class="row">
@@ -26,14 +27,61 @@
            </div>
                 
        </div>
+       <!--
+        <ModalBox 
+        v-show="isModalVisible"
+        @close="closeModal">
+        <template v-slot:title>
+            Create a new article
+        </template>
+        <template v-slot:body>
+            <form @submit.prevent="onSubmit" >
+                 <div v-if="errors" class="alert alert-danger text-center">
+                    {{ errors }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <input v-model="title" type="text" class="form-control" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">city</label>
+                    <input v-model="city" type="text" class="form-control" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea v-model="description" cols="10" rows="5" class="form-control"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Category</label>
+                   <select v-model="category" class="form-control">
+                    <option v-for="category in categories" :key="category._id" :value="category._id" >{{ category.name }}</option>
+                   </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Image</label>
+                    <input class="form-control" ref="imageUrl" type="file" @change="onSelect">
+                </div>
+               <div class="d-grid gap-2 mt-4">
+                 <button type="submit" class="btn btn-warning">Save changes</button>
+               </div>
+            </form>
+        </template>
+        </ModalBox>
+        -->
+       
     </div>
 </template>
 
 <script>
+
 export default {
-    
+   methods: {
+    toNewArticlePage() {
+        this.$router.push({ name: "NewArticlePage" })
+    }
+   }
 }
 </script>
 
-<style>
+<style scoped>
 </style>

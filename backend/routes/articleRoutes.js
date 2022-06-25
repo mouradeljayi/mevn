@@ -1,7 +1,6 @@
 const express = require('express')
-const multer = require('multer')
-const fileFilter = require('../middleware/fileMiddleware')
 const router = express.Router()
+const multer = require('multer')
 const 
 {
     getArticles, 
@@ -12,16 +11,22 @@ const
 
 const { protect } = require('../middleware/authMiddleware')
 
-const upload = multer({
-    dest: './uploads',
-    fileFilter,
-    limits: {
-        fileSize: 500000
+// multer middleware
+let storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, './uploads')
+    },
+    filename: function(req, file, cb) {
+        cb(null, file.fieldname + "_" + Date.now() + "_" + file.originalname)
     }
 })
 
+let upload = multer({
+    storage: storage
+}).single('imageUrl')
+
 router.route('/').get(protect, getArticles)
-router.route('/', upload.single('file')).post(protect, setArticle)
-router.route('/:id').put(protect, updateArticle).delete(protect, deleteArticle)
+router.route('/').post(protect, upload, setArticle)
+router.route('/:id').put(protect, upload, updateArticle).delete(protect, deleteArticle)
 
 module.exports = router
