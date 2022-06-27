@@ -3,7 +3,6 @@
     <div class="row">
        <CategoryBar @logout="onLogout"/>
        <div class="col-sm min-vh-100">
-            <SearchBar/>
             <ArticleList/>
         </div>
     </div>
@@ -14,14 +13,13 @@
 <script>
 import axios from 'axios'
 import CategoryBar from '@/components/CategoryBar.vue'
-import SearchBar from '@/components/SearchBar.vue';
 import ArticleList from '@/components/ArticleList.vue';
 
 export default {
     name: "HomePage",
     data() {
         return {
-            username: ""
+            username: "",
         };
     },
     created() {
@@ -42,7 +40,7 @@ export default {
             this.$router.push("/");
         }
     },
-    components: { CategoryBar, SearchBar, ArticleList }
+    components: { CategoryBar, ArticleList }
 }
 </script>
 

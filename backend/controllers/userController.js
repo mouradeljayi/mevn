@@ -4,6 +4,14 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const User = require('../models/userModel')
 
+// @desc Get Users
+// @route GET /api/users
+// @access Private
+const getUsers = asyncHandler(async (req, res) => {
+    const users = await User.find()
+    res.status(200).json(users)
+})
+
 // @desc Register new user
 // @route POST /api/users
 // @access Public
@@ -86,5 +94,6 @@ const generateToken = (id) => {
 module.exports = {
     registerUser,
     loginUser,
-    getMe
+    getMe,
+    getUsers
 }

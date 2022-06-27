@@ -1,6 +1,9 @@
 <template>
-  <div class="bg-light">
+  <div class="bg-light p-5">
     <h3 class="text-center">Create your article</h3>
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-sm btn-outline-secondary" @click="goBack()">Go back</button>
+    </div>
     <div class="row justify-content-center mt-3">
         <div class="col-md-6">
             <div class="card p-3">
@@ -31,7 +34,7 @@
                     <input class="form-control" ref="imageUrl" type="file" @change="onSelect">
                 </div>
                <div class="d-grid gap-2 mt-4">
-                 <button type="submit" class="btn btn-warning">Save changes</button>
+                 <button v-if="disabledBtn" type="submit" class="btn btn-warning">Save changes</button>
                </div>
             </form>
             </div>
@@ -46,7 +49,7 @@ export default {
     name: "NewArticlePage",
      data() {
         return {
-            //isModalVisible: false,
+            disabledBtn: true,
             categories: [],
             errors: '',
             form: {
@@ -71,6 +74,9 @@ export default {
         })
     },
      methods: {
+        goBack() {
+            return this.$router.push('/home')
+        },
         onSelect() {
             const file = this.$refs.imageUrl.files[0]
             this.form.imageUrl = file 
@@ -87,7 +93,7 @@ export default {
             try {
                 await axios.post('http://localhost:5000/api/articles', formData, config).then((res) => {
                     console.log(res)
-                    this.form = ''
+                    this.$router.push('/')
                 })
             } catch(err) {
                 console.log(err.response);
