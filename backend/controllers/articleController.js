@@ -11,6 +11,20 @@ const getArticles = asyncHandler(async (req, res) => {
     res.status(200).json(articles)
 })
 
+
+// @desc Get Article
+// @route GET /api/articles/
+// @access Private
+const getArticle = asyncHandler(async (req, res) => {
+    const article = await Article.findById(req.params.id)
+    if(!article) {
+        res.status(400)
+        throw new Error('Article not found')
+    }
+
+    res.status(200).json(article)
+})
+
 // @desc Set Article
 // @route POST /api/articles
 // @access Private
@@ -55,18 +69,17 @@ const updateArticle = asyncHandler(async (req, res) => {
         res.status(401)
         throw new Error('User not authorized')
     }
+    
     // image update
-    let new_image = ''
-
     if(req.file) {
-        new_image = req.file.filename
+        req.body.imageUrl = req.file.filename
         try{
             fs.unlinkSync('./uploads/' + req.body.old_image)
         }catch(err) {
             console.log(err)
         }
     }else {
-        new_image = req.body.old_image
+        req.body.imageUrl = req.body.old_image
     }
     const updatedArticle = await Article.findByIdAndUpdate(req.params.id, req.body, {
         new : true,
@@ -109,6 +122,7 @@ const deleteArticle = asyncHandler(async (req, res) => {
 
 module.exports = {
     getArticles,
+    getArticle,
     setArticle,
     updateArticle,
     deleteArticle

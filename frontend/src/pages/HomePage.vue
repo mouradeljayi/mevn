@@ -3,6 +3,9 @@
     <div class="row">
        <CategoryBar @logout="onLogout"/>
        <div class="col-sm min-vh-100">
+            <div v-if="this.$route.params.message" class="alert alert-success">
+            {{ this.$route.params.message }}
+            </div>
             <ArticleList/>
         </div>
     </div>

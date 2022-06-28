@@ -6,7 +6,8 @@ const
     getArticles, 
     setArticle, 
     updateArticle, 
-    deleteArticle
+    deleteArticle,
+    getArticle
 } = require('../controllers/articleController')
 
 const { protect } = require('../middleware/authMiddleware')
@@ -27,6 +28,6 @@ let upload = multer({
 
 router.route('/').get(protect, getArticles)
 router.route('/').post(protect, upload, setArticle)
-router.route('/:id').put(protect, upload, updateArticle).delete(protect, deleteArticle)
+router.route('/:id').get(protect, getArticle).put(protect, upload, updateArticle).delete(protect, deleteArticle)
 
 module.exports = router

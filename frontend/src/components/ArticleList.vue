@@ -9,7 +9,7 @@
         <!--<button type="button" @click="showModal" class="btn btn-sm btn-warning">New article</button>-->
         <button type="button" @click="toNewArticlePage" class="btn btn-sm btn-warning">New article</button>
        </div>
-       <div class="p-3 card mt-3 ">
+       <div  class="p-3 card mt-3 ">
            <div class="row">
              <div v-for="article in searchArticles()" :key="article._id" class="col-4 mb-4">
                 <div class="card position-relative" style="width: 18rem;">
@@ -24,14 +24,17 @@
                          <p class="fw-bold text-info">{{ article.city }}</p>
                        </div>
                         <div class="d-grid gap-2 d-sm-flex justify-content-sm-start">
-                            <button @click="showModal()" class="btn btn-sm btn-secondary"><i class="bi bi-trash"></i></button>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-pencil-square"></i></button>
+                            <router-link :to="{ name: 'EditArticlePage', params: {id: article._id} }" ><button  class="btn btn-sm btn-secondary"><i class="bi bi-pencil-square"></i></button></router-link>
+                            <button @click="showModal(article._id)" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
                         </div>
                         
                     </div>
                 </div>
            </div>
            
+           </div>
+           <div v-if="!searchArticles().length">
+               It seems no one has created an article yet, it's time be the first one !
            </div>
            <div  v-if="search && !searchArticles().length">
                  No results for "{{ search }}"
@@ -42,10 +45,13 @@
         v-show="isModalVisible"
         @close="closeModal">
         <template v-slot:title>
-          
+          Are you sure you want to delete this article ?
         </template>
         <template v-slot:body>
-            
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-start">
+                <button @click="closeModal()" class="btn btn-sm btn-secondary">Close</button>
+                <button @click="deleteArticle()" class="btn btn-sm btn-danger">Delete</button>
+            </div> 
         </template>
         </ModalBox>
         
@@ -66,7 +72,7 @@ export default {
             users: [],
             search : '',
             categories: [],
-            article: {}
+            articleId: '',
         }
     },
     mounted() {
@@ -102,11 +108,26 @@ export default {
         })
     },
    methods: {
-     showModal() {
+     showModal(articleId) {
         this.isModalVisible = true;
+        this.articleId = articleId
+        console.log(this.articleId)
+      },
+      deleteArticle() {
+         axios.delete(`http://localhost:5000/api/articles/${this.articleId}`, {
+             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` 
+        }}).then(res => {
+            this.users = res.data
+            console.log(res.data)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        this.isModalVisible = false
       },
       closeModal() {
         this.isModalVisible = false;
+        this.articleId =  ''
       },
     toNewArticlePage() {
         this.$router.push({ name: "NewArticlePage" })

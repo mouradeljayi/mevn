@@ -5,6 +5,8 @@ import RegisterPage from '@/pages/RegisterPage'
 import HomePage from '@/pages/HomePage'
 import NotFound from '@/pages/NotFound'
 import NewArticlePage from '@/pages/NewArticlePage'
+import EditArticlePage from '@/pages/EditArticlePage'
+
 
 
 const routes = [
@@ -28,6 +30,11 @@ const routes = [
         component: NewArticlePage,
         name: 'NewArticlePage',
     }, 
+    {
+        path: '/edit/:id',
+        component: EditArticlePage,
+        name: 'EditArticlePage'
+    },
     { 
         path: '/:pathMatch(.*)*', 
         name: 'NotFound', 
